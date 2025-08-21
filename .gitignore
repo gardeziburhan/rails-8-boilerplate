@@ -1,0 +1,19 @@
+# Node
+node_modules/
+dist/
+
+# Rails
+/log/*
+/tmp/*
+/storage/*
+/public/assets
+.byebug_history
+
+# System
+.env
+.env.*
+config/master.key
+config/credentials.yml.enc
+
+# Others
+.DS_Store
