@@ -17,6 +17,7 @@ class SessionsController < ApplicationController
       response.set_header "X-Session-Token", @session.signed_id
 
       render json: @session, status: :created
+      PostHog.capture({ distinct_id: user.id, event: "user_logged_in" }) if defined?(PostHog)
     else
       render json: { error: "That email or password is incorrect" }, status: :unauthorized
     end
