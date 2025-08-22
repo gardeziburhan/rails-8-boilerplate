@@ -7,3 +7,9 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+require 'factory_bot_rails'
+
+FactoryBot.reload
+
+users_to_create = 50 - User.count
+FactoryBot.create_list(:user, users_to_create) if users_to_create.positive?
