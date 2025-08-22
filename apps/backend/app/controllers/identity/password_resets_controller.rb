@@ -10,6 +10,7 @@ class Identity::PasswordResetsController < ApplicationController
   def create
     if @user = User.find_by(email: params[:email], verified: true)
       UserMailer.with(user: @user).password_reset.deliver_later
+      PostHog.capture({ distinct_id: @user.id, event: "password_reset_requested" }) if defined?(PostHog)
     else
       render json: { error: "You can't reset your password until you verify your email" }, status: :bad_request
     end
