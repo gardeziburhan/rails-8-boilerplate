@@ -24,9 +24,9 @@ module Backend
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
-    # Only loads a smaller set of middleware suitable for API only apps.
-    # Middleware like session, flash, cookies can be added back manually.
-    # Skip views, helpers and assets when generating a new resource.
-    config.api_only = true
+    # Enable the full Rails stack so views and assets can be served directly
+    # from this application. This allows React components to be rendered by
+    # the Rails server without a separate frontend app.
+    config.api_only = false
   end
 end
