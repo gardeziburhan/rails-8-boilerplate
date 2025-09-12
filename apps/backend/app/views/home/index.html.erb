@@ -1,55 +1,9 @@
 <div id="root"></div>
-<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
 <script>
   const e = React.createElement;
-  const { useState } = React;
-
-  function SignIn() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("");
-
-    function handleSubmit(event) {
-      event.preventDefault();
-      fetch("/sign_in", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      }).then(async (response) => {
-        if (response.ok) {
-          setMessage("Signed in!");
-        } else {
-          const data = await response.json();
-          setMessage(data.error || "Sign in failed");
-        }
-      }).catch(() => setMessage("Network error"));
-    }
-
-    return e("div", null,
-      e("form", { onSubmit: handleSubmit },
-        e("div", null,
-          e("input", {
-            type: "email",
-            value: email,
-            placeholder: "Email",
-            onChange: (ev) => setEmail(ev.target.value)
-          })
-        ),
-        e("div", null,
-          e("input", {
-            type: "password",
-            value: password,
-            placeholder: "Password",
-            onChange: (ev) => setPassword(ev.target.value)
-          })
-        ),
-        e("button", { type: "submit" }, "Sign In")
-      ),
-      message && e("p", null, message)
-    );
+  function App() {
+    return e('h1', null, 'Hello from React!');
   }
-
-  const root = ReactDOM.createRoot(document.getElementById("root"));
-  root.render(e(SignIn));
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(e(App));
 </script>

@@ -27,6 +27,6 @@ module Backend
     # Enable the full Rails stack so views and assets can be served directly
     # from this application. This allows React components to be rendered by
     # the Rails server without a separate frontend app.
-    config.api_only = true
+    config.api_only = false
   end
 end
