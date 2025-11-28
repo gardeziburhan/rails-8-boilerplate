@@ -2,23 +2,23 @@ module ApplicationHelper
   require "json"
 
   def vite_asset_tags(entry = "frontend/entrypoints/application.jsx")
-    if Rails.env.development?
-      safe_join(
-        [
-          javascript_include_tag("http://localhost:5173/@vite/client", type: "module", crossorigin: "anonymous"),
-          javascript_include_tag("http://localhost:5173/#{entry}", type: "module", crossorigin: "anonymous"),
-        ],
-      )
-    else
-      tags = vite_stylesheets(entry).map do |href|
+    if (manifest = vite_manifest)
+      tags = vite_stylesheets(entry, manifest).map do |href|
         stylesheet_link_tag(href, "data-turbo-track": "reload")
       end
-      if (path = vite_asset_path(entry))
+      if (path = vite_asset_path(entry, manifest))
         tags << javascript_include_tag(path, type: "module", "data-turbo-track": "reload")
       end
 
-      safe_join(tags)
+      return safe_join(tags)
     end
+
+    safe_join(
+      [
+        javascript_include_tag("http://localhost:5173/@vite/client", type: "module", crossorigin: "anonymous"),
+        javascript_include_tag("http://localhost:5173/#{entry}", type: "module", crossorigin: "anonymous"),
+      ],
+    )
   end
 
   private
@@ -30,17 +30,13 @@ module ApplicationHelper
     end
   end
 
-  def vite_asset_path(entry)
-    return unless (manifest = vite_manifest)
-
+  def vite_asset_path(entry, manifest)
     if (file = manifest.dig(entry, "file"))
       "/vite/#{file}"
     end
   end
 
-  def vite_stylesheets(entry)
-    return [] unless (manifest = vite_manifest)
-
+  def vite_stylesheets(entry, manifest)
     Array(manifest.dig(entry, "css")).map { |href| "/vite/#{href}" }
   end
 end
