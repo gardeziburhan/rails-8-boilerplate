@@ -17,7 +17,7 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3000/sign_up", {
+      const res = await fetch(`${window.location.origin}/sign_up`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

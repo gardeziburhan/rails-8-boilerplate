@@ -1,25 +1,35 @@
 import { useEffect, useState } from "react";
+import api, {
+  currentSessionId,
+  sessionHeaders,
+  storeSessionId,
+  storeSessionToken,
+} from "../lib/api";
 
-export default function Dashboard() {
+export default function Dashboard({ onLogout }) {
   const [user, setUser] = useState(null);
 
   // Example: check session on mount
   useEffect(() => {
-    fetch("http://localhost:3000/sessions", {
-      credentials: "include",
-    })
-      .then((res) => res.json())
+    api
+      .get("/sessions", { headers: sessionHeaders() })
       .then((data) => setUser(data))
-      .catch(() => setUser(null));
+      .catch(() => {
+        storeSessionToken(null);
+        storeSessionId(null);
+        onLogout?.();
+      });
   }, []);
 
   const handleLogout = async () => {
     try {
-      // Here we just destroy session with id 1 (for demo)
-      await fetch("http://localhost:3000/sessions/1", {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const sessionId = currentSessionId();
+      const endpoint = sessionId ? `/sessions/${sessionId}` : "/sessions/1";
+
+      await api.delete(endpoint, { headers: sessionHeaders() });
+      storeSessionToken(null);
+      storeSessionId(null);
+      onLogout?.();
       window.location.href = "/login";
     } catch (err) {
       console.error("Logout failed", err);

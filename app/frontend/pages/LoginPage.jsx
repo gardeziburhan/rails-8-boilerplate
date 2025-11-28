@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { storeSessionId, storeSessionToken } from "../lib/api";
 import AuthLayout from "../layouts/AuthLayout";
 
-export default function Login() {
+export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,21 +16,25 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3000/sign_in", {
+      const response = await fetch(`${window.location.origin}/sign_in`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
-        credentials: "include", // keeps Rails session cookie
+        credentials: "include",
       });
 
-      if (!res.ok) {
-        const err = await res.json();
+      if (!response.ok) {
+        const err = await response.json();
         throw new Error(err.error || "Login failed");
       }
 
-      const data = await res.json();
+      const data = await response.json();
+      const token = response.headers.get("X-Session-Token");
+
+      storeSessionId(data.id);
+      storeSessionToken(token);
       setSuccess("Login successful!");
-      // setSuccess("Login successful!");
+      onLogin?.();
       window.location.href = "/dashboard";
 
       console.log("Logged in user:", data);
