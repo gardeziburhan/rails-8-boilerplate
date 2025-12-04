@@ -1,29 +1,23 @@
-# Rails 8 + React Monolith
+# Rails + React application
 
-The repository now contains a single Rails 8 application in the `app/` directory. Rails renders the React client directly, so there is no separate backend/frontend split.
+This Rails 8 application renders the React SPA directly from Rails. The React source lives in `frontend/` and is bundled with Vite into `public/vite` for production/test runs.
 
-## Layout
-- `app/` – Rails root containing controllers, models, views, and the React source under `frontend/`.
-- `app/frontend/` – React application powered by Vite. Assets are built into `app/public/vite/`.
-- `app/config/` – Rails configuration, including routes for both the API and the React entry point.
-
-## Getting Started
-1. `cd app`
-2. Install Ruby gems: `bundle install`
+## Setup
+1. Install Ruby gems: `bundle install`
+2. Install Node 20.19+ (Vite 7 / React Router 7 engines require it). With `nvm`, run `nvm install && nvm use` (project includes `.nvmrc`); with `asdf`, run `asdf install` (project includes `.node-version`).
 3. Install Node dependencies: `npm install`
-4. Set up the database: `bin/rails db:prepare`
+3. Prepare the database: `bin/rails db:prepare`
 
-## Running the App
-- Start the Rails server: `bin/rails server`
-- In another terminal, start the Vite dev server so Rails can load unbundled assets: `npm run dev -- --host`
+## Development
+- Start both Rails and the Vite dev server with a single command: `bin/dev`. This launches `npm run dev -- --host` alongside `bin/rails server` so the frontend assets load without connection errors.
+- If you prefer to run Vite yourself or need hot reloading tweaks, you can still start it manually with `npm run dev -- --host`. When Vite is down and no compiled assets exist, the browser will show `ERR_CONNECTION_REFUSED` because `http://localhost:5173` isn’t reachable.
+- If the Vite dev server is not running but you have built assets, Rails will automatically serve the compiled files from `public/vite`.
+- If your shell reports `permission denied: bin/dev`, mark it executable once with `chmod +x bin/dev` or run `bash bin/dev`. Running `bin/setup` will also set the executable bit.
 
-Rails will render the React root at `/` and fall back to the React app for other HTML routes. For production or test environments, build the assets once with `npm run build`; Rails will serve the compiled files from `public/vite`.
 
-## Tests and Linting
-From the `app/` directory:
+## Building assets
+Run `npm run build` to output compiled assets to `public/vite`. Rails reads the manifest from that directory when the Vite dev server is not running. Set `RAILS_SERVE_STATIC_FILES=1` in production so the compiled files are served.
 
-- Run the Rails test suite: `bin/rails test`
-- Lint Ruby code: `bin/rubocop -f github`
-
-## Deployment Notes
-Ensure `npm run build` is executed during your deploy process so the React assets are available in `public/vite`, and set `RAILS_SERVE_STATIC_FILES=1` so Rails serves the compiled files.
+## Tests
+- Run all Rails tests: `bin/rails test`
+- Lint Ruby files: `bin/rubocop -f github`
