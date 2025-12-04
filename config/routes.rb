@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     post "sign_up", to: "registrations#create"
     resources :sessions, only: [:index, :show, :destroy]
     resource  :password, only: [:edit, :update]
+
     namespace :identity do
       resource :email,              only: [:edit, :update]
       resource :email_verification, only: [:show, :create]
@@ -11,6 +12,7 @@ Rails.application.routes.draw do
     end
   end
 
+  # Let React handle routing for HTML
   root "home#index"
   get "up" => "rails/health#show", as: :rails_health_check
   get "*path", to: "home#index", constraints: ->(request) { request.format.html? }
