@@ -1,75 +1,21 @@
-# Monorepo Boilerplate
+# Rails + React application
 
-## Introduction
+This Rails 8 application renders the React SPA directly from Rails. The React source lives in `app/assets/javascript/` and is bundled with esbuild into `app/assets/builds`.
 
-This repository uses a monorepo layout with two applications:
+## Setup
+1. Install Ruby gems: `bundle install`
+2. Install Node 20.19+ (React Router 7 engines require it). With `nvm`, run `nvm install && nvm use` (project includes `.nvmrc`); with `asdf`, run `asdf install` (project includes `.node-version`).
+3. Install Node dependencies: `npm install`
+4. Prepare the database: `bin/rails db:prepare`
 
-- **apps/backend** – a Rails 8 API/backend.
-- **apps/frontend** – a React application bundled with Vite.
+## Development
+- Start both Rails and the esbuild watcher with a single command: `bin/dev`. This launches `npm run dev -- --watch` alongside `bin/rails server` so the frontend assets rebuild automatically.
+- If you prefer to run esbuild yourself, start `npm run dev -- --watch` in one shell and `bin/rails server` in another.
+- Built assets live in `app/assets/builds` and are served through the Rails asset pipeline. Delete the folder if you want a clean rebuild.
 
-Keeping both apps in the same repository simplifies dependency management and allows coordinated deployments.
+## Building assets
+Run `npm run build` to output compiled assets to `app/assets/builds`. The Rails asset pipeline will serve them in production when `RAILS_SERVE_STATIC_FILES=1` is set.
 
-## Prerequisites
-
-Make sure the following dependencies are installed:
-
-- Ruby and Bundler
-- Node.js and npm
-- PostgreSQL
-- Docker (optional, used by Kamal for container-based deployment)
-
-## Backend Installation (`apps/backend`)
-
-```bash
-cd apps/backend
-bundle install
-bin/setup            # prepare database and other assets
-bin/rails db:migrate # run database migrations
-bin/rails server     # start the Rails server
-```
-
-## Frontend Installation (`apps/frontend`)
-
-```bash
-cd apps/frontend
-npm install
-npm run dev          # start Vite development server
-```
-
-## Tests and Linters
-
-### Backend
-
-```bash
-cd apps/backend
-bin/rails test   # run Rails test suite
-bin/rubocop      # lint with RuboCop
-```
-
-### Frontend
-
-```bash
-cd apps/frontend
-npm test         # run frontend tests (if configured)
-npm run lint     # run ESLint
-```
-
-## Deployment Notes
-
-The backend includes [Kamal](https://github.com/basecamp/kamal) for Docker-based deployment.
-Typical flow:
-
-```bash
-cd apps/backend
-bundle exec kamal setup
-bundle exec kamal deploy
-```
-
-Refer to the Kamal documentation for server prerequisites and additional commands.
-
-## Further Reading
-
-For more detailed information, consult the app-specific READMEs:
-
-- [apps/backend/README.md](apps/backend/README.md)
-- [apps/frontend/README.md](apps/frontend/README.md)
+## Tests
+- Run all Rails tests: `bin/rails test`
+- Lint Ruby files: `bin/rubocop -f github`
