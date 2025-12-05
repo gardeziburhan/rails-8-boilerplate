@@ -1,6 +1,12 @@
 export const SESSION_ID_KEY = "sessionId";
 export const SESSION_TOKEN_KEY = "sessionToken";
-export const baseURL = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+
+function detectBaseURL() {
+  const meta = document.querySelector('meta[name="api-base-url"]');
+  return meta?.content || window.location.origin;
+}
+
+export const baseURL = detectBaseURL();
 
 export function storeSessionToken(token) {
   if (token) {
@@ -52,14 +58,16 @@ async function request(path, options = {}) {
 
 export default {
   get: (path, options = {}) => request(path, { method: "GET", ...options }),
-  post: (path, body, options = {}) => request(path, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    },
-    body: JSON.stringify(body),
-    ...options,
-  }),
-  delete: (path, options = {}) => request(path, { method: "DELETE", ...options }),
+  post: (path, body, options = {}) =>
+    request(path, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+      },
+      body: JSON.stringify(body),
+      ...options,
+    }),
+  delete: (path, options = {}) =>
+    request(path, { method: "DELETE", ...options }),
 };

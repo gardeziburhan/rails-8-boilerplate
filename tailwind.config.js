@@ -2,7 +2,7 @@
 export default {
   content: [
     "./app/views/**/*.{html,html.erb,erb}",
-    "./frontend/**/*.{js,ts,jsx,tsx}",
+    "./app/assets/javascript/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {},

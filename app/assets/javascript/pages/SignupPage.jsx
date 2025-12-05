@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import AuthLayout from "../layouts/AuthLayout";
 
 export default function SignupPage() {

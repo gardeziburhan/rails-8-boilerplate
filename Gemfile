@@ -56,3 +56,6 @@ gem "rack-cors"
 
 # Analytics
 gem "posthog-ruby", require: false
+
+# Asset pipeline
+gem "propshaft", "~> 1.3"

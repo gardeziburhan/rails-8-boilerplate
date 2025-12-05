@@ -6,9 +6,8 @@
     "node": ">=20.19.0"
   },
   "scripts": {
-    "build": "node esbuild.config.cjs",
-    "build:watch": "node esbuild.config.cjs watch",
-    "build:css": "tailwindcss --postcss -c ./config/tailwind.config.cjs -i ./frontend/index.css -o ./app/assets/builds/tailwind.css",
+    "dev": "node esbuild.config.mjs --watch",
+    "build": "node esbuild.config.mjs",
     "lint": "eslint 'frontend/**/*.{js,jsx,ts,tsx}' --max-warnings=0",
     "lint:fix": "npm run lint -- --fix",
     "test": "jest --runInBand"

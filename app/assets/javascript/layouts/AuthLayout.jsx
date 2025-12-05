@@ -1,3 +1,6 @@
+// app/assets/javascript/layouts/AuthLayout.jsx
+import React from "react";
+
 export default function AuthLayout({ title, children }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
