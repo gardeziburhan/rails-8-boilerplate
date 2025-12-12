@@ -35,7 +35,7 @@ jobs:
           ruby-version: 3.3.4
           bundler-cache: true
       - name: Install frontend dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps # temporary while React 19 and testing-library peer deps diverge
       - name: Build assets
         run: npm run build
       - name: Setup database

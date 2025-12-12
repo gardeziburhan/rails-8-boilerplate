@@ -1,0 +1,9 @@
+- name: Scan for common Rails security vulnerabilities using static analysis
+  run: |
+    set +e
+    bin/brakeman --no-pager
+    status=$?
+    # 0 = OK, 5 = “not latest Brakeman”
+    if [ "$status" != "0" ] && [ "$status" != "5" ]; then
+      exit $status
+    fi
